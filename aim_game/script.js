@@ -94,3 +94,19 @@ function getColor()
 {
     return colors[Math.floor(Math.random(colors) * colors.length)]
 }
+
+function winGame()
+{
+    setInterval(pop, 42)
+}
+
+function pop()
+{   
+    const circles = document.querySelector('.circle')
+    if(circles)
+    {
+        circles.click()
+    } else {
+        return
+    }
+}
