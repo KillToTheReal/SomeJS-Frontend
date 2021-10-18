@@ -1,25 +1,36 @@
 const canvas = document.getElementById("gameCanv")
 const canvasCont = canvas.getContext('2d')
-var collisions = 0
-var speedX = 1.5
-var speedY = 1.5
-var leftX = 0
 const cw = canvas.width
 const ch = canvas.height
+//Кол-во столкновений с бамперами для ускорения
+var collisions = 0
+//Вертикальная и горизонтальная скорость шара
+var speedX = 1.5
+var speedY = 1.5
+//Координаты шара
 var ballX = cw/2
 var ballY = ch/2
+//Координаты левого и правого бампера
 var bumperY = ch/2
 var coordYbump = ch/2
+//Счет первого и второго игрока
 var leftScore = 0
 var rightScore = 0
-var IsWinner = false
+//Скорость правого бампера
 var AIbumperSpeed = 1.45
+
+//Равновероятные 0 или 1
+var directionX = Math.floor(Math.random() +0.5)
+var directionY = Math.floor(Math.random() +0.5)
+
 window.onload = function(){
+    //Перемещение правого бампера относительно мыши
     canvas.addEventListener('mousemove',(e)=>{
         bumperY = e.clientY
         createBumper(bumperY)
 
     })
+    //Отрисовка и перемещение всего 
   let m = setInterval(()=>
     {
         moveEverything()
@@ -27,6 +38,7 @@ window.onload = function(){
         createBumper(bumperY)
         AIbumper(coordYbump, ballY)
         faster()
+        //Условия окончания игры
         if(leftScore >=7 || rightScore >=7)
         {
             clearInterval(m)
@@ -37,8 +49,6 @@ window.onload = function(){
 }
 
 
-var directionX = Math.random()
-var directionY = Math.random()
 
 function Wingame(){
     var winner = rightScore > leftScore ? 'right' : 'left'
@@ -98,19 +108,25 @@ function restart()
 {
     ballX = cw/2
     ballY = ch/2
-    directionX = Math.random()
-    directionY = Math.random() 
+    directionX =Math.floor(Math.random() +0.5)
+    directionY = Math.floor(Math.random() +0.5)
+    console.log(directionX,directionY)
     speedX = Math.random() * 2 + 1
     speedy = Math.random() * 3 + 1
     collisions = 0
     AIbumperSpeed = 1.5
+    if(directionX === 0)
+    {
+        coordYbump = directionY === 0? 400 : 100
+    }
 }
 
 function moveEverything()
 {
-
-    if(ballX+7 >= cw-10 && ballY+7>=coordYbump-7 && (ballY < coordYbump-40+80||ballY+14 < coordYbump-40+80)){
-
+    //Если шар находится на X: == Край бампера && центр Шара находится на Y ниже чем верхний край бампера & 
+    // & Верх или низ шара находятся выше чем нижний край бампера ::: Коллизия
+    if(ballX+7 >= cw-10 && ballY+7>=coordYbump+7 && (ballY < coordYbump+80||ballY+14 < coordYbump+80))
+    {
         collisions++
         directionX = 1
     }
@@ -119,7 +135,7 @@ function moveEverything()
         directionX = 0
         collisions++
     }
-    
+    //Если шар пролетел за бампер
     if(ballX<=0)
     {
         restart()
@@ -132,14 +148,14 @@ function moveEverything()
     }
 
     ballX = directionX === 0 ? ballX + speedX : ballX - speedX
+    ballY = directionY === 0 ? ballY + speedY : ballY - speedY
 
+    //Отбитие мяча об потолок
     if(ballY >=ch)
         directionY = 1
-    
-     else if(ballY<=0)
+    else if(ballY<=0)
         directionY = 0
 
-    ballY = directionY === 0 ? ballY + speedY : ballY - speedY
 }
 
 
@@ -163,4 +179,3 @@ function drawEverything()
     canvasCont.fillText(rightScore,cw-cw/4,ch/10,100)
     canvasCont.fillRect(ballX-7,ballY-7,15,15)
 }
-
