@@ -98,11 +98,10 @@ function restart()
 {
     ballX = cw/2
     ballY = ch/2
-    console.log(Math.random() * 4 + 1)
-    directionX = Math.random() * 4 + 1
-    directionY = Math.random() * 4 + 1
-    speedX = 1.5
-    speedy = 1.5
+    directionX = Math.random()
+    directionY = Math.random() 
+    speedX = Math.random() * 2 + 1
+    speedy = Math.random() * 3 + 1
     collisions = 0
     AIbumperSpeed = 1.5
 }
